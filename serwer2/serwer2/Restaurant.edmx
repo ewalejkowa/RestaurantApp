@@ -1,0 +1,571 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="RestaurantModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ELEMENT_ZAMOWIENIA">
+          <Key>
+            <PropertyRef Name="ID_ELEMENT" />
+          </Key>
+          <Property Name="ID_ELEMENT" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ILOSC" Type="int" Nullable="false" />
+          <Property Name="FK_ID_ZAMOWIENIA" Type="int" Nullable="false" />
+          <Property Name="FK_ID_POZYCJI" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KATEGORIA">
+          <Key>
+            <PropertyRef Name="ID_KATEGORIA" />
+          </Key>
+          <Property Name="ID_KATEGORIA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NAZWA" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MENU">
+          <Key>
+            <PropertyRef Name="ID_MENU" />
+          </Key>
+          <Property Name="ID_MENU" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NAZWA" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="POZYCJA_MENU">
+          <Key>
+            <PropertyRef Name="ID_POZYCJI" />
+          </Key>
+          <Property Name="ID_POZYCJI" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CENA_BRUTTO" Type="float" Nullable="false" />
+          <Property Name="NAZWA" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FK_IDKATEGORIA" Type="int" Nullable="false" />
+          <Property Name="FK_IDMENU" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRACOWNIK">
+          <Key>
+            <PropertyRef Name="ID_PRACOWNIKA" />
+          </Key>
+          <Property Name="ID_PRACOWNIKA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IMIE" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NAZWISKO" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="REALIZACJA_ZAMOWIENIA">
+          <Key>
+            <PropertyRef Name="ID_REALIZACJI" />
+          </Key>
+          <Property Name="ID_REALIZACJI" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_ID_PRACOWNIKA" Type="int" Nullable="false" />
+          <Property Name="FK_ID_ZAMOWIENIA" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="STATUS">
+          <Key>
+            <PropertyRef Name="ID_STATUS" />
+          </Key>
+          <Property Name="ID_STATUS" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NAZWA" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ZAMOWIENIE">
+          <Key>
+            <PropertyRef Name="ID_ZAMOWIENIA" />
+          </Key>
+          <Property Name="ID_ZAMOWIENIA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CENA" Type="float" Nullable="false" />
+          <Property Name="DATA_PRZGOTOWANIA" Type="date" />
+          <Property Name="DATA_WYDANIA" Type="date" />
+          <Property Name="DATA_ZLOZENIA" Type="date" Nullable="false" />
+          <Property Name="UWAGI" Type="varchar" MaxLength="100" />
+          <Property Name="CZY_ZAPLACONE" Type="int" Nullable="false" />
+          <Property Name="FK_STATUS" Type="int" Nullable="false" />
+          <Property Name="FK_PRACOWNIK_WYDAJACY" Type="int" />
+          <Property Name="FK_PRACOWNIK_PRZYJMUJACY" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="CONSTRAINT10">
+          <End Role="PRACOWNIK" Type="Self.PRACOWNIK" Multiplicity="1" />
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRACOWNIK">
+              <PropertyRef Name="ID_PRACOWNIKA" />
+            </Principal>
+            <Dependent Role="ZAMOWIENIE">
+              <PropertyRef Name="FK_PRACOWNIK_PRZYJMUJACY" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT11">
+          <End Role="PRACOWNIK" Type="Self.PRACOWNIK" Multiplicity="0..1" />
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRACOWNIK">
+              <PropertyRef Name="ID_PRACOWNIKA" />
+            </Principal>
+            <Dependent Role="ZAMOWIENIE">
+              <PropertyRef Name="FK_PRACOWNIK_WYDAJACY" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT13">
+          <End Role="PRACOWNIK" Type="Self.PRACOWNIK" Multiplicity="1" />
+          <End Role="REALIZACJA_ZAMOWIENIA" Type="Self.REALIZACJA_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRACOWNIK">
+              <PropertyRef Name="ID_PRACOWNIKA" />
+            </Principal>
+            <Dependent Role="REALIZACJA_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_PRACOWNIKA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT14">
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="1" />
+          <End Role="REALIZACJA_ZAMOWIENIA" Type="Self.REALIZACJA_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ZAMOWIENIE">
+              <PropertyRef Name="ID_ZAMOWIENIA" />
+            </Principal>
+            <Dependent Role="REALIZACJA_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_ZAMOWIENIA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT16">
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="1" />
+          <End Role="ELEMENT_ZAMOWIENIA" Type="Self.ELEMENT_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ZAMOWIENIE">
+              <PropertyRef Name="ID_ZAMOWIENIA" />
+            </Principal>
+            <Dependent Role="ELEMENT_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_ZAMOWIENIA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT17">
+          <End Role="POZYCJA_MENU" Type="Self.POZYCJA_MENU" Multiplicity="1" />
+          <End Role="ELEMENT_ZAMOWIENIA" Type="Self.ELEMENT_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="POZYCJA_MENU">
+              <PropertyRef Name="ID_POZYCJI" />
+            </Principal>
+            <Dependent Role="ELEMENT_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_POZYCJI" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT6">
+          <End Role="KATEGORIA" Type="Self.KATEGORIA" Multiplicity="1" />
+          <End Role="POZYCJA_MENU" Type="Self.POZYCJA_MENU" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KATEGORIA">
+              <PropertyRef Name="ID_KATEGORIA" />
+            </Principal>
+            <Dependent Role="POZYCJA_MENU">
+              <PropertyRef Name="FK_IDKATEGORIA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT7">
+          <End Role="MENU" Type="Self.MENU" Multiplicity="1" />
+          <End Role="POZYCJA_MENU" Type="Self.POZYCJA_MENU" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MENU">
+              <PropertyRef Name="ID_MENU" />
+            </Principal>
+            <Dependent Role="POZYCJA_MENU">
+              <PropertyRef Name="FK_IDMENU" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT9">
+          <End Role="STATUS" Type="Self.STATUS" Multiplicity="1" />
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="STATUS">
+              <PropertyRef Name="ID_STATUS" />
+            </Principal>
+            <Dependent Role="ZAMOWIENIE">
+              <PropertyRef Name="FK_STATUS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RestaurantModelStoreContainer">
+          <EntitySet Name="ELEMENT_ZAMOWIENIA" EntityType="Self.ELEMENT_ZAMOWIENIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KATEGORIA" EntityType="Self.KATEGORIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MENU" EntityType="Self.MENU" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="POZYCJA_MENU" EntityType="Self.POZYCJA_MENU" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PRACOWNIK" EntityType="Self.PRACOWNIK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="REALIZACJA_ZAMOWIENIA" EntityType="Self.REALIZACJA_ZAMOWIENIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="STATUS" EntityType="Self.STATUS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ZAMOWIENIE" EntityType="Self.ZAMOWIENIE" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="CONSTRAINT10" Association="Self.CONSTRAINT10">
+            <End Role="PRACOWNIK" EntitySet="PRACOWNIK" />
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT11" Association="Self.CONSTRAINT11">
+            <End Role="PRACOWNIK" EntitySet="PRACOWNIK" />
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT13" Association="Self.CONSTRAINT13">
+            <End Role="PRACOWNIK" EntitySet="PRACOWNIK" />
+            <End Role="REALIZACJA_ZAMOWIENIA" EntitySet="REALIZACJA_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT14" Association="Self.CONSTRAINT14">
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+            <End Role="REALIZACJA_ZAMOWIENIA" EntitySet="REALIZACJA_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT16" Association="Self.CONSTRAINT16">
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+            <End Role="ELEMENT_ZAMOWIENIA" EntitySet="ELEMENT_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT17" Association="Self.CONSTRAINT17">
+            <End Role="POZYCJA_MENU" EntitySet="POZYCJA_MENU" />
+            <End Role="ELEMENT_ZAMOWIENIA" EntitySet="ELEMENT_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT6" Association="Self.CONSTRAINT6">
+            <End Role="KATEGORIA" EntitySet="KATEGORIA" />
+            <End Role="POZYCJA_MENU" EntitySet="POZYCJA_MENU" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT7" Association="Self.CONSTRAINT7">
+            <End Role="MENU" EntitySet="MENU" />
+            <End Role="POZYCJA_MENU" EntitySet="POZYCJA_MENU" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT9" Association="Self.CONSTRAINT9">
+            <End Role="STATUS" EntitySet="STATUS" />
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RestaurantModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ELEMENT_ZAMOWIENIA">
+          <Key>
+            <PropertyRef Name="ID_ELEMENT" />
+          </Key>
+          <Property Name="ID_ELEMENT" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ILOSC" Type="Int32" Nullable="false" />
+          <Property Name="FK_ID_ZAMOWIENIA" Type="Int32" Nullable="false" />
+          <Property Name="FK_ID_POZYCJI" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KATEGORIA">
+          <Key>
+            <PropertyRef Name="ID_KATEGORIA" />
+          </Key>
+          <Property Name="ID_KATEGORIA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NAZWA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MENU">
+          <Key>
+            <PropertyRef Name="ID_MENU" />
+          </Key>
+          <Property Name="ID_MENU" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NAZWA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="POZYCJA_MENU">
+          <Key>
+            <PropertyRef Name="ID_POZYCJI" />
+          </Key>
+          <Property Name="ID_POZYCJI" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CENA_BRUTTO" Type="Double" Nullable="false" />
+          <Property Name="NAZWA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FK_IDKATEGORIA" Type="Int32" Nullable="false" />
+          <Property Name="FK_IDMENU" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRACOWNIK">
+          <Key>
+            <PropertyRef Name="ID_PRACOWNIKA" />
+          </Key>
+          <Property Name="ID_PRACOWNIKA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IMIE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NAZWISKO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="REALIZACJA_ZAMOWIENIA">
+          <Key>
+            <PropertyRef Name="ID_REALIZACJI" />
+          </Key>
+          <Property Name="ID_REALIZACJI" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_ID_PRACOWNIKA" Type="Int32" Nullable="false" />
+          <Property Name="FK_ID_ZAMOWIENIA" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="STATUS">
+          <Key>
+            <PropertyRef Name="ID_STATUS" />
+          </Key>
+          <Property Name="ID_STATUS" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NAZWA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ZAMOWIENIE">
+          <Key>
+            <PropertyRef Name="ID_ZAMOWIENIA" />
+          </Key>
+          <Property Name="ID_ZAMOWIENIA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CENA" Type="Double" Nullable="false" />
+          <Property Name="DATA_PRZGOTOWANIA" Type="DateTime" Precision="0" />
+          <Property Name="DATA_WYDANIA" Type="DateTime" Precision="0" />
+          <Property Name="DATA_ZLOZENIA" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="UWAGI" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CZY_ZAPLACONE" Type="Int32" Nullable="false" />
+          <Property Name="FK_STATUS" Type="Int32" Nullable="false" />
+          <Property Name="FK_PRACOWNIK_WYDAJACY" Type="Int32" />
+          <Property Name="FK_PRACOWNIK_PRZYJMUJACY" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="CONSTRAINT16">
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="1" />
+          <End Role="ELEMENT_ZAMOWIENIA" Type="Self.ELEMENT_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ZAMOWIENIE">
+              <PropertyRef Name="ID_ZAMOWIENIA" />
+            </Principal>
+            <Dependent Role="ELEMENT_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_ZAMOWIENIA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT17">
+          <End Role="POZYCJA_MENU" Type="Self.POZYCJA_MENU" Multiplicity="1" />
+          <End Role="ELEMENT_ZAMOWIENIA" Type="Self.ELEMENT_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="POZYCJA_MENU">
+              <PropertyRef Name="ID_POZYCJI" />
+            </Principal>
+            <Dependent Role="ELEMENT_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_POZYCJI" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT6">
+          <End Role="KATEGORIA" Type="Self.KATEGORIA" Multiplicity="1" />
+          <End Role="POZYCJA_MENU" Type="Self.POZYCJA_MENU" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KATEGORIA">
+              <PropertyRef Name="ID_KATEGORIA" />
+            </Principal>
+            <Dependent Role="POZYCJA_MENU">
+              <PropertyRef Name="FK_IDKATEGORIA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT7">
+          <End Role="MENU" Type="Self.MENU" Multiplicity="1" />
+          <End Role="POZYCJA_MENU" Type="Self.POZYCJA_MENU" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MENU">
+              <PropertyRef Name="ID_MENU" />
+            </Principal>
+            <Dependent Role="POZYCJA_MENU">
+              <PropertyRef Name="FK_IDMENU" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT10">
+          <End Role="PRACOWNIK" Type="Self.PRACOWNIK" Multiplicity="1" />
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRACOWNIK">
+              <PropertyRef Name="ID_PRACOWNIKA" />
+            </Principal>
+            <Dependent Role="ZAMOWIENIE">
+              <PropertyRef Name="FK_PRACOWNIK_PRZYJMUJACY" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT11">
+          <End Role="PRACOWNIK" Type="Self.PRACOWNIK" Multiplicity="0..1" />
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRACOWNIK">
+              <PropertyRef Name="ID_PRACOWNIKA" />
+            </Principal>
+            <Dependent Role="ZAMOWIENIE">
+              <PropertyRef Name="FK_PRACOWNIK_WYDAJACY" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT13">
+          <End Role="PRACOWNIK" Type="Self.PRACOWNIK" Multiplicity="1" />
+          <End Role="REALIZACJA_ZAMOWIENIA" Type="Self.REALIZACJA_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRACOWNIK">
+              <PropertyRef Name="ID_PRACOWNIKA" />
+            </Principal>
+            <Dependent Role="REALIZACJA_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_PRACOWNIKA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT14">
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="1" />
+          <End Role="REALIZACJA_ZAMOWIENIA" Type="Self.REALIZACJA_ZAMOWIENIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ZAMOWIENIE">
+              <PropertyRef Name="ID_ZAMOWIENIA" />
+            </Principal>
+            <Dependent Role="REALIZACJA_ZAMOWIENIA">
+              <PropertyRef Name="FK_ID_ZAMOWIENIA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONSTRAINT9">
+          <End Role="STATUS" Type="Self.STATUS" Multiplicity="1" />
+          <End Role="ZAMOWIENIE" Type="Self.ZAMOWIENIE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="STATUS">
+              <PropertyRef Name="ID_STATUS" />
+            </Principal>
+            <Dependent Role="ZAMOWIENIE">
+              <PropertyRef Name="FK_STATUS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RestaurantEntities3" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ELEMENT_ZAMOWIENIA" EntityType="Self.ELEMENT_ZAMOWIENIA" />
+          <EntitySet Name="KATEGORIA" EntityType="Self.KATEGORIA" />
+          <EntitySet Name="MENU" EntityType="Self.MENU" />
+          <EntitySet Name="POZYCJA_MENU" EntityType="Self.POZYCJA_MENU" />
+          <EntitySet Name="PRACOWNIK" EntityType="Self.PRACOWNIK" />
+          <EntitySet Name="REALIZACJA_ZAMOWIENIA" EntityType="Self.REALIZACJA_ZAMOWIENIA" />
+          <EntitySet Name="STATUS" EntityType="Self.STATUS" />
+          <EntitySet Name="ZAMOWIENIE" EntityType="Self.ZAMOWIENIE" />
+          <AssociationSet Name="CONSTRAINT16" Association="Self.CONSTRAINT16">
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+            <End Role="ELEMENT_ZAMOWIENIA" EntitySet="ELEMENT_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT17" Association="Self.CONSTRAINT17">
+            <End Role="POZYCJA_MENU" EntitySet="POZYCJA_MENU" />
+            <End Role="ELEMENT_ZAMOWIENIA" EntitySet="ELEMENT_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT6" Association="Self.CONSTRAINT6">
+            <End Role="KATEGORIA" EntitySet="KATEGORIA" />
+            <End Role="POZYCJA_MENU" EntitySet="POZYCJA_MENU" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT7" Association="Self.CONSTRAINT7">
+            <End Role="MENU" EntitySet="MENU" />
+            <End Role="POZYCJA_MENU" EntitySet="POZYCJA_MENU" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT10" Association="Self.CONSTRAINT10">
+            <End Role="PRACOWNIK" EntitySet="PRACOWNIK" />
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT11" Association="Self.CONSTRAINT11">
+            <End Role="PRACOWNIK" EntitySet="PRACOWNIK" />
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT13" Association="Self.CONSTRAINT13">
+            <End Role="PRACOWNIK" EntitySet="PRACOWNIK" />
+            <End Role="REALIZACJA_ZAMOWIENIA" EntitySet="REALIZACJA_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT14" Association="Self.CONSTRAINT14">
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+            <End Role="REALIZACJA_ZAMOWIENIA" EntitySet="REALIZACJA_ZAMOWIENIA" />
+          </AssociationSet>
+          <AssociationSet Name="CONSTRAINT9" Association="Self.CONSTRAINT9">
+            <End Role="STATUS" EntitySet="STATUS" />
+            <End Role="ZAMOWIENIE" EntitySet="ZAMOWIENIE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RestaurantModelStoreContainer" CdmEntityContainer="RestaurantEntities3">
+          <EntitySetMapping Name="ELEMENT_ZAMOWIENIA">
+            <EntityTypeMapping TypeName="RestaurantModel.ELEMENT_ZAMOWIENIA">
+              <MappingFragment StoreEntitySet="ELEMENT_ZAMOWIENIA">
+                <ScalarProperty Name="ID_ELEMENT" ColumnName="ID_ELEMENT" />
+                <ScalarProperty Name="ILOSC" ColumnName="ILOSC" />
+                <ScalarProperty Name="FK_ID_ZAMOWIENIA" ColumnName="FK_ID_ZAMOWIENIA" />
+                <ScalarProperty Name="FK_ID_POZYCJI" ColumnName="FK_ID_POZYCJI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KATEGORIA">
+            <EntityTypeMapping TypeName="RestaurantModel.KATEGORIA">
+              <MappingFragment StoreEntitySet="KATEGORIA">
+                <ScalarProperty Name="ID_KATEGORIA" ColumnName="ID_KATEGORIA" />
+                <ScalarProperty Name="NAZWA" ColumnName="NAZWA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MENU">
+            <EntityTypeMapping TypeName="RestaurantModel.MENU">
+              <MappingFragment StoreEntitySet="MENU">
+                <ScalarProperty Name="ID_MENU" ColumnName="ID_MENU" />
+                <ScalarProperty Name="NAZWA" ColumnName="NAZWA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="POZYCJA_MENU">
+            <EntityTypeMapping TypeName="RestaurantModel.POZYCJA_MENU">
+              <MappingFragment StoreEntitySet="POZYCJA_MENU">
+                <ScalarProperty Name="ID_POZYCJI" ColumnName="ID_POZYCJI" />
+                <ScalarProperty Name="CENA_BRUTTO" ColumnName="CENA_BRUTTO" />
+                <ScalarProperty Name="NAZWA" ColumnName="NAZWA" />
+                <ScalarProperty Name="FK_IDKATEGORIA" ColumnName="FK_IDKATEGORIA" />
+                <ScalarProperty Name="FK_IDMENU" ColumnName="FK_IDMENU" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRACOWNIK">
+            <EntityTypeMapping TypeName="RestaurantModel.PRACOWNIK">
+              <MappingFragment StoreEntitySet="PRACOWNIK">
+                <ScalarProperty Name="ID_PRACOWNIKA" ColumnName="ID_PRACOWNIKA" />
+                <ScalarProperty Name="IMIE" ColumnName="IMIE" />
+                <ScalarProperty Name="NAZWISKO" ColumnName="NAZWISKO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="REALIZACJA_ZAMOWIENIA">
+            <EntityTypeMapping TypeName="RestaurantModel.REALIZACJA_ZAMOWIENIA">
+              <MappingFragment StoreEntitySet="REALIZACJA_ZAMOWIENIA">
+                <ScalarProperty Name="ID_REALIZACJI" ColumnName="ID_REALIZACJI" />
+                <ScalarProperty Name="FK_ID_PRACOWNIKA" ColumnName="FK_ID_PRACOWNIKA" />
+                <ScalarProperty Name="FK_ID_ZAMOWIENIA" ColumnName="FK_ID_ZAMOWIENIA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="STATUS">
+            <EntityTypeMapping TypeName="RestaurantModel.STATUS">
+              <MappingFragment StoreEntitySet="STATUS">
+                <ScalarProperty Name="ID_STATUS" ColumnName="ID_STATUS" />
+                <ScalarProperty Name="NAZWA" ColumnName="NAZWA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ZAMOWIENIE">
+            <EntityTypeMapping TypeName="RestaurantModel.ZAMOWIENIE">
+              <MappingFragment StoreEntitySet="ZAMOWIENIE">
+                <ScalarProperty Name="ID_ZAMOWIENIA" ColumnName="ID_ZAMOWIENIA" />
+                <ScalarProperty Name="CENA" ColumnName="CENA" />
+                <ScalarProperty Name="DATA_PRZGOTOWANIA" ColumnName="DATA_PRZGOTOWANIA" />
+                <ScalarProperty Name="DATA_WYDANIA" ColumnName="DATA_WYDANIA" />
+                <ScalarProperty Name="DATA_ZLOZENIA" ColumnName="DATA_ZLOZENIA" />
+                <ScalarProperty Name="UWAGI" ColumnName="UWAGI" />
+                <ScalarProperty Name="CZY_ZAPLACONE" ColumnName="CZY_ZAPLACONE" />
+                <ScalarProperty Name="FK_STATUS" ColumnName="FK_STATUS" />
+                <ScalarProperty Name="FK_PRACOWNIK_WYDAJACY" ColumnName="FK_PRACOWNIK_WYDAJACY" />
+                <ScalarProperty Name="FK_PRACOWNIK_PRZYJMUJACY" ColumnName="FK_PRACOWNIK_PRZYJMUJACY" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
